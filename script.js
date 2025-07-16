@@ -4,34 +4,32 @@ async function cargarDatos() {
   const response = await fetch(URL_CSV);
   const texto = await response.text();
   const filas = texto.trim().split('\n');
-
-  // Obtener cabecera y datos
   const cabecera = filas[0].split(',');
+
+  // Detectar columnas
+  const idxJugador = cabecera.indexOf('Jugador');
+  const idxPTS = cabecera.indexOf('PTS');
+  const idxBonus = cabecera.indexOf('€');
+  const idxJornadas = cabecera
+    .map((nombre, i) => nombre.match(/^J\d+$/) ? i : null)
+    .filter(i => i !== null);
+
+  // Crear cabecera dinámica
+  const thead = document.querySelector('#tabla-clasificacion thead');
+  const trCabecera = document.createElement('tr');
+  trCabecera.innerHTML = `
+    <th>Posición</th>
+    <th>Jugador</th>
+    <th>PTS</th>
+    ${idxJornadas.map(i => `<th>${cabecera[i]}</th>`).join('')}
+    <th>€</th>
+  `;
+  thead.innerHTML = '';
+  thead.appendChild(trCabecera);
+
+  // Procesar datos
   const datos = filas.slice(1).map(fila => {
     const columnas = fila.split(',');
     return {
-      jugador: columnas[cabecera.indexOf('Jugador')],
-      pts: parseFloat(columnas[cabecera.indexOf('PTS')]) || 0,
-      bonus: columnas.includes('€') ? parseFloat(columnas[cabecera.indexOf('€')]) || 0 : 0
-    };
-  });
-
-  // Ordenar por puntos descendente
-  datos.sort((a, b) => b.pts - a.pts);
-
-  // Insertar en la tabla
-  const tbody = document.querySelector('#tabla-clasificacion tbody');
-  datos.forEach((dato, i) => {
-    const fila = document.createElement('tr');
-    fila.innerHTML = `
-      <td>${i + 1}</td>
-      <td>${dato.jugador}</td>
-      <td>${dato.pts}</td>
-      <td>${dato.bonus.toFixed(2)} €</td>
-    `;
-    tbody.appendChild(fila);
-  });
-}
-
-cargarDatos();
-
+      jugador: columnas[idxJugador] || '',
+      pts: parseFl
