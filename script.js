@@ -6,20 +6,19 @@ async function cargarDatos() {
   const filas = texto.trim().split('\n');
   const cabecera = filas[0].split(',');
 
-  // Índices clave
   const idxJugador = cabecera.indexOf('Jugador');
   const idxPTS = cabecera.indexOf('PTS');
 
-  // Detectar jornadas tipo J1, J2, ..., J19
+  // Detectar jornadas J1...J19
   const idxJornadas = cabecera
     .map((nombre, i) => nombre.match(/^J\d+$/) ? i : null)
     .filter(i => i !== null);
 
-  // Crear cabecera de la tabla
+  // CABECERA dinámica
   const thead = document.querySelector('#tabla-clasificacion thead');
   const trCabecera = document.createElement('tr');
   trCabecera.innerHTML = `
-    <th>Posición</th>
+    <th>#</th>
     <th>Jugador</th>
     <th>PTS</th>
     ${idxJornadas.map(i => `<th>${cabecera[i]}</th>`).join('')}
@@ -27,7 +26,7 @@ async function cargarDatos() {
   thead.innerHTML = '';
   thead.appendChild(trCabecera);
 
-  // Procesar datos
+  // PROCESAR datos
   const datos = filas.slice(1).map(fila => {
     const columnas = fila.split(',');
     return {
@@ -37,14 +36,22 @@ async function cargarDatos() {
     };
   });
 
-  // Ordenar por puntos descendente
+  // ORDENAR por puntos descendente
   datos.sort((a, b) => b.pts - a.pts);
 
-  // Mostrar datos en la tabla
+  // MOSTRAR datos
   const tbody = document.querySelector('#tabla-clasificacion tbody');
   tbody.innerHTML = '';
   datos.forEach((dato, i) => {
     const fila = document.createElement('tr');
+
+    // TOP 2 y BOTTOM 2
+    if (i < 2) {
+      fila.classList.add('top-pos');
+    } else if (i >= datos.length - 2) {
+      fila.classList.add('bottom-pos');
+    }
+
     fila.innerHTML = `
       <td>${i + 1}</td>
       <td>${dato.jugador}</td>
