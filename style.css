@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   padding: 20px;
   background-color: #f4f4f4;
   color: #333;
@@ -13,18 +13,39 @@ h1 {
 table {
   margin: auto;
   border-collapse: collapse;
-  width: 80%;
+  width: 95%;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 th, td {
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 8px;
   text-align: center;
 }
 
+/* Cabecera */
 thead {
   background-color: #007BFF;
   color: white;
+  font-weight: bold;
+}
+
+/* Negrita para columnas específicas */
+td:nth-child(1),
+td:nth-child(2),
+td:nth-child(3),
+th:nth-child(1),
+th:nth-child(2),
+th:nth-child(3) {
+  font-weight: bold;
+}
+
+/* Colores especiales por posición */
+tr.top-pos {
+  background-color: #2CFC7A;
+}
+
+tr.bottom-pos {
+  background-color: #FC2C84;
 }
