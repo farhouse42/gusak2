@@ -95,16 +95,26 @@
         padding: 6px;
       }
     }
+    .tabla-scroll {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.tabla-scroll table {
+  min-width: 600px;
+}
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Vuelta 1</h1>
+    <div class="tabla-scroll">
     <table>
       <thead id="tabla-cabecera"></thead>
       <tbody id="tabla-datos"></tbody>
     </table>
   </div>
+</div>
 
   <script>
     const urlCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRJEayO5QMrhGBTvwAxiaaD3fBb-RzxDhIIYXxb627HcBk_i6yJXFbzU-NqE2s4p0uto7uTA8uw9PEx/pub?gid=0&single=true&output=csv";
