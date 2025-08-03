@@ -103,7 +103,7 @@
 
         // Generar cabecera
         const headerRow = document.createElement("tr");
-        headerRow.innerHTML = `<th>#</th><th>Jugador</th><th>Puntos</th>` +
+        headerRow.innerHTML = `<th>#</th><th>Jugador</th><th>pts</th>` +
           headers.slice(2).map(j => `<th>${j}</th>`).join("");
         thead.appendChild(headerRow);
 
@@ -112,13 +112,13 @@
           const celdas = fila.split(",");
           return {
             nombre: celdas[0],
-            puntos: parseInt(celdas[1]),
+            pts: parseInt(celdas[1]),
             jornadas: celdas.slice(2)
           };
         });
 
-        // Ordenar por puntos totales
-        jugadores.sort((a, b) => b.puntos - a.puntos);
+        // Ordenar por pts totales
+        jugadores.sort((a, b) => b.pts - a.pts);
 
         // Renderizar
         jugadores.forEach((jugador, index) => {
@@ -129,7 +129,7 @@
           tr.innerHTML = `
             <td class="posicion">${index + 1}</td>
             <td class="nombre">${nombre}</td>
-            <td class="total">${jugador.puntos}</td>
+            <td class="total">${jugador.pts}</td>
             ${jugador.jornadas.map(j => `<td>${j}</td>`).join("")}
           `;
           tbody.appendChild(tr);
