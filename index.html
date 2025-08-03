@@ -34,6 +34,8 @@
       border-collapse: collapse;
       font-size: 15px;
       overflow-x: auto;
+      border-radius: 12px;
+      overflow: hidden;
     }
 
     th, td {
@@ -47,6 +49,14 @@
       position: sticky;
       top: 0;
       z-index: 1;
+    }
+
+    th:first-child {
+      border-top-left-radius: 12px;
+    }
+
+    th:last-child {
+      border-top-right-radius: 12px;
     }
 
     td.total {
@@ -64,8 +74,16 @@
       text-align: left;
     }
 
-    tr:first-child td.nombre {
-      color: #FFD700;
+    /* Top 4: verde */
+    tr.top {
+      background-color: #143b14;
+      color: #50fa50;
+    }
+
+    /* Bottom 4: rojo */
+    tr.bottom {
+      background-color: #3b1212;
+      color: #ff4c43;
     }
 
     @media (max-width: 600px) {
@@ -81,7 +99,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>📊 Clasificación Quiniela - Güsak</h1>
+    <h1>Vuelta 1</h1>
     <table>
       <thead id="tabla-cabecera"></thead>
       <tbody id="tabla-datos"></tbody>
@@ -101,35 +119,34 @@
         const thead = document.getElementById("tabla-cabecera");
         const tbody = document.getElementById("tabla-datos");
 
-        // Generar cabecera
+        // Cabecera
         const headerRow = document.createElement("tr");
-        headerRow.innerHTML = `<th>#</th><th>Jugador</th><th>pts</th>` +
+        headerRow.innerHTML = `<th>#</th><th>Jugador</th><th>Pts</th>` +
           headers.slice(2).map(j => `<th>${j}</th>`).join("");
         thead.appendChild(headerRow);
 
-        // Procesar datos
+        // Datos
         const jugadores = bodyRows.map(fila => {
           const celdas = fila.split(",");
           return {
             nombre: celdas[0],
-            pts: parseInt(celdas[1]),
+            puntos: parseInt(celdas[1]),
             jornadas: celdas.slice(2)
           };
         });
 
-        // Ordenar por pts totales
-        jugadores.sort((a, b) => b.pts - a.pts);
+        jugadores.sort((a, b) => b.puntos - a.puntos);
 
-        // Renderizar
         jugadores.forEach((jugador, index) => {
           const tr = document.createElement("tr");
-          let nombre = jugador.nombre;
-          if (index === 0) nombre += " 🏆";
+
+          if (index < 4) tr.classList.add("top");
+          if (index >= jugadores.length - 4) tr.classList.add("bottom");
 
           tr.innerHTML = `
             <td class="posicion">${index + 1}</td>
-            <td class="nombre">${nombre}</td>
-            <td class="total">${jugador.pts}</td>
+            <td class="nombre">${jugador.nombre}</td>
+            <td class="total">${jugador.puntos}</td>
             ${jugador.jornadas.map(j => `<td>${j}</td>`).join("")}
           `;
           tbody.appendChild(tr);
