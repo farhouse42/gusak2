@@ -1,27 +1,140 @@
-<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Clasificación Quiniela - 1ª Vuelta</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clasificación Quiniela - Güsak</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #000000;
+      color: #F4F0E3;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid #80785C;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #80785C;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+      overflow-x: auto;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #333;
+    }
+
+    th {
+      background-color: #4E4938;
+      color: #F4F0E3;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td.total {
+      font-weight: bold;
+      font-family: Consolas, monospace;
+      text-align: center;
+    }
+
+    td.posicion {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    td.nombre {
+      text-align: left;
+    }
+
+    tr:first-child td.nombre {
+      color: #FFD700;
+    }
+
+    @media (max-width: 600px) {
+      table {
+        font-size: 13px;
+      }
+
+      th, td {
+        padding: 6px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Clasificación Quiniela - 1ª Vuelta</h1>
-  <table id="tabla-clasificacion">
-    <thead>
-      <tr>
-        <th>Posición</th>
-        <th>Jugador</th>
-        <th>Puntos</th>
-        <th>Bonus (€)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Aquí se insertarán los datos dinámicamente -->
-    </tbody>
-  </table>
+  <div class="container">
+    <h1>📊 Clasificación Quiniela - Güsak</h1>
+    <table>
+      <thead id="tabla-cabecera"></thead>
+      <tbody id="tabla-datos"></tbody>
+    </table>
+  </div>
 
-  <script src="script.js"></script>
+  <script>
+    const urlCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRJEayO5QMrhGBTvwAxiaaD3fBb-RzxDhIIYXxb627HcBk_i6yJXFbzU-NqE2s4p0uto7uTA8uw9PEx/pub?gid=0&single=true&output=csv";
+
+    fetch(urlCSV)
+      .then(res => res.text())
+      .then(data => {
+        const rows = data.trim().split("\n");
+        const headers = rows[0].split(",");
+        const bodyRows = rows.slice(1);
+
+        const thead = document.getElementById("tabla-cabecera");
+        const tbody = document.getElementById("tabla-datos");
+
+        // Generar cabecera
+        const headerRow = document.createElement("tr");
+        headerRow.innerHTML = `<th>#</th><th>Jugador</th><th>Puntos</th>` +
+          headers.slice(2).map(j => `<th>${j}</th>`).join("");
+        thead.appendChild(headerRow);
+
+        // Procesar datos
+        const jugadores = bodyRows.map(fila => {
+          const celdas = fila.split(",");
+          return {
+            nombre: celdas[0],
+            puntos: parseInt(celdas[1]),
+            jornadas: celdas.slice(2)
+          };
+        });
+
+        // Ordenar por puntos totales
+        jugadores.sort((a, b) => b.puntos - a.puntos);
+
+        // Renderizar
+        jugadores.forEach((jugador, index) => {
+          const tr = document.createElement("tr");
+          let nombre = jugador.nombre;
+          if (index === 0) nombre += " 🏆";
+
+          tr.innerHTML = `
+            <td class="posicion">${index + 1}</td>
+            <td class="nombre">${nombre}</td>
+            <td class="total">${jugador.puntos}</td>
+            ${jugador.jornadas.map(j => `<td>${j}</td>`).join("")}
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+  </script>
 </body>
 </html>
