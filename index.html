@@ -2,176 +2,124 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Clasificación Quiniela - Güsak</title>
+  <title>Quiniela Güsak</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#000000;
-      --accent:#80785C;
-      --header:#4E4938;
-      --muted:#F4F0E3;
-      --green:#50fa50;
-      --red:#ff4c43;
-      --sticky-bg:#0f0f0f;
-    }
-
-    *{box-sizing:border-box}
-
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--bg);
-      color: var(--muted);
+      background-color: #000;
+      color: #F4F0E3;
       margin: 0;
       padding: 20px;
       text-align: center;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: auto;
-      padding: 18px;
     }
 
     h1 {
-      margin: 0 0 14px 0;
-      color: var(--accent);
-      font-size: 1.4rem;
-      letter-spacing: 0.3px;
+      margin-bottom: 20px;
+      color: #80785C;
     }
 
-    /* pequeño separador decorativo */
-    .subtitle-line {
-      height: 6px;
-      width: 80px;
-      margin: 10px auto 18px;
-      border-radius: 4px;
-      background: linear-gradient(90deg, rgba(78,73,56,0.9), rgba(255,240,184,0.9));
-      opacity: 0.95;
+    .tabla-contenedor {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .tabla-fija {
+      flex-shrink: 0;
+      background-color: #1a1a1a;
+      border-right: 2px solid #333;
+      border-radius: 12px 0 0 12px;
     }
 
     .tabla-scroll {
       overflow-x: auto;
-      width: 100%;
-      -webkit-overflow-scrolling: touch;
+      background-color: #1a1a1a;
+      border-radius: 0 12px 12px 0;
     }
 
     table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
+      border-collapse: collapse;
       font-size: 15px;
-      min-width: 640px; /* deja espacio para jornadas */
-      background: transparent;
-    }
-
-    thead tr {
-      /* cabecera redondeada visual (solo la parte superior) */
     }
 
     th, td {
-      padding: 10px 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      padding: 10px;
+      border-bottom: 1px solid #333;
       white-space: nowrap;
-      vertical-align: middle;
     }
 
-    th {
-      background: linear-gradient(180deg, rgba(78,73,56,1), rgba(66,61,48,1));
-      color: var(--muted);
+    thead th {
+      background: linear-gradient(180deg, #4E4938, #3b3629);
+      color: #F4F0E3;
       font-weight: 600;
-      text-transform: uppercase;
-      font-size: 12px;
-      letter-spacing: 0.6px;
-      position: sticky;
-      top: 0;
-      z-index: 6;
     }
 
-    /* redondeo en las esquinas superiores de la cabecera */
-    th:first-child { border-top-left-radius: 10px; }
-    th:last-child  { border-top-right-radius: 10px; }
-
-    /* Anchos fijos (importantes para sticky) */
-    td.posicion, th.posicion { width: 56px; min-width:56px; max-width:56px; text-align:center; }
-    td.nombre, th.nombre { width: 220px; min-width:160px; max-width:320px; text-align:left; padding-left:14px; }
-    td.total, th.total { width: 80px; min-width:70px; max-width:100px; text-align:center; font-family:Consolas, "Courier New", monospace; font-weight:700; }
-
-    /* Sticky columns: #, Jugador, Pts */
-    /* # (primera columna) */
-    th.posicion, td.posicion {
-      position: sticky;
-      left: 0;
-      z-index: 5;
-      background: var(--sticky-bg);
-      /* una ligera capa para que se vean separadas al hacer scroll */
-      box-shadow: 2px 0 6px rgba(0,0,0,0.35);
+    /* Bordes redondeados superiores */
+    .tabla-fija thead th:first-child {
+      border-top-left-radius: 12px;
+    }
+    .tabla-scroll thead th:last-child {
+      border-top-right-radius: 12px;
     }
 
-    /* Jugador (segunda columna) — debe quedar sobre la primera si solapan */
-    th.nombre, td.nombre {
-      position: sticky;
-      left: 56px; /* igual al ancho de la primera */
-      z-index: 5;
-      background: var(--sticky-bg);
-      box-shadow: 2px 0 6px rgba(0,0,0,0.28);
+    /* Hover en filas */
+    tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.05);
     }
 
-    /* Pts (tercera columna) */
-    th.total, td.total {
-      position: sticky;
-      left: 56px + 220px; /* no se puede usar calc con JS aquí: lo definimos con el valor calculado */
-      /* We'll override with explicit pixels using the computed value below via an extra rule */
-      z-index: 5;
-      background: var(--sticky-bg);
-      box-shadow: 2px 0 6px rgba(0,0,0,0.22);
+    td.total {
+      font-weight: bold;
+      font-family: Consolas, monospace;
+      text-align: center;
     }
 
-    /* Como CSS no acepta arithmetic in left with var easily, colocamos el valor exacto (56 + 220 = 276px) */
-    th.total, td.total { left: 276px; }
+    td.posicion {
+      text-align: center;
+      font-weight: bold;
+    }
 
-    /* Hover y alternado más sutil */
-    tbody tr:hover { background: rgba(255,255,255,0.02); }
-    tbody tr:nth-child(even) td { background: rgba(255,255,255,0.01); }
+    td.nombre {
+      text-align: left;
+    }
 
-    /* Top 4: verde (texto y tenue fondo) */
-    tr.top td { color: var(--green); background: rgba(80,250,80,0.03); }
+    /* Top 4 */
+    tr.top td {
+      color: #50fa50;
+    }
 
-    /* Bottom 4: rojo */
-    tr.bottom td { color: var(--red); background: rgba(255,76,67,0.03); }
-
-    /* si el sticky crea líneas en cabecera al superponerse, aseguramos fondo en th */
-    thead th { background-clip: padding-box; }
-
-    /* Responsive tweaks */
-    @media (max-width: 900px) {
-      td.nombre, th.nombre { width: 180px; min-width:140px; }
-      th.total, td.total { left: 236px; } /* recalcula si reduces nombre */
-      th:first-child, td:first-child { left: 0; }
+    /* Bottom 4 */
+    tr.bottom td {
+      color: #ff4c43;
     }
 
     @media (max-width: 600px) {
-      body { padding: 12px; }
-      .container { padding: 8px; }
-      h1 { font-size: 1.1rem; }
-      .subtitle-line { width: 60px; height: 5px; }
-      table { min-width: 520px; }
-      td.posicion, th.posicion { width: 48px; left:0; min-width:48px; }
-      td.nombre, th.nombre { width: 160px; left:48px; }
-      th.total, td.total { left: 208px; } /* 48 + 160 = 208 */
+      table {
+        font-size: 13px;
+      }
+      th, td {
+        padding: 6px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>📊 Clasificación Quiniela - Güsak</h1>
-    <div class="subtitle-line" aria-hidden="true"></div>
+  <h1>Quiniela Güsak</h1>
 
+  <div class="tabla-contenedor">
+    <!-- Tabla fija -->
+    <div class="tabla-fija">
+      <table>
+        <thead id="cabecera-fija"></thead>
+        <tbody id="datos-fija"></tbody>
+      </table>
+    </div>
+
+    <!-- Tabla desplazable -->
     <div class="tabla-scroll">
       <table>
-        <thead id="tabla-cabecera"></thead>
-        <tbody id="tabla-datos"></tbody>
+        <thead id="cabecera-scroll"></thead>
+        <tbody id="datos-scroll"></tbody>
       </table>
     </div>
   </div>
@@ -182,25 +130,18 @@
     fetch(urlCSV)
       .then(res => res.text())
       .then(data => {
-        const rows = data.trim().split("\n").map(r => r.replace(/\r/g,''));
-        if(!rows.length) return;
+        const rows = data.trim().split("\n");
         const headers = rows[0].split(",");
         const bodyRows = rows.slice(1);
 
-        const thead = document.getElementById("tabla-cabecera");
-        const tbody = document.getElementById("tabla-datos");
-        thead.innerHTML = '';
-        tbody.innerHTML = '';
+        const cabFija = document.getElementById("cabecera-fija");
+        const cabScroll = document.getElementById("cabecera-scroll");
+        const datFija = document.getElementById("datos-fija");
+        const datScroll = document.getElementById("datos-scroll");
 
-        // Cabecera: # | Jugador | Pts | Jornadas...
-        const headerRow = document.createElement("tr");
-        headerRow.innerHTML = `
-          <th class="posicion">#</th>
-          <th class="nombre">Jugador</th>
-          <th class="total">Pts</th>
-          ${headers.slice(2).map(h => `<th>${h}</th>`).join('')}
-        `;
-        thead.appendChild(headerRow);
+        // Cabeceras
+        cabFija.innerHTML = `<tr><th>#</th><th>Jugador</th><th>Pts</th></tr>`;
+        cabScroll.innerHTML = `<tr>${headers.slice(2).map(h => `<th>${h}</th>`).join("")}</tr>`;
 
         // Datos
         const jugadores = bodyRows.map(fila => {
@@ -212,36 +153,26 @@
           };
         });
 
-        jugadores.sort((a,b) => b.puntos - a.puntos);
+        jugadores.sort((a, b) => b.puntos - a.puntos);
 
-        jugadores.forEach((jugador, index) => {
-          const tr = document.createElement("tr");
-          if (index < 4) tr.classList.add("top");
-          if (index >= jugadores.length - 4) tr.classList.add("bottom");
+        jugadores.forEach((j, index) => {
+          const clase = index < 4 ? "top" : (index >= jugadores.length - 4 ? "bottom" : "");
 
-          tr.innerHTML = `
-            <td class="posicion">${index + 1}</td>
-            <td class="nombre">${escapeHtml(jugador.nombre)}</td>
-            <td class="total">${jugador.puntos}</td>
-            ${jugador.jornadas.map(j => `<td>${escapeHtml(j)}</td>`).join("")}
+          datFija.innerHTML += `
+            <tr class="${clase}">
+              <td class="posicion">${index + 1}</td>
+              <td class="nombre">${j.nombre}</td>
+              <td class="total">${j.puntos}</td>
+            </tr>
           `;
-          tbody.appendChild(tr);
-        });
-      })
-      .catch(err => {
-        console.error('Error cargando CSV', err);
-      });
 
-    // pequeño helper para evitar inyección en nombres (por si alguien pone comillas)
-    function escapeHtml(str){
-      if(str === undefined || str === null) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
+          datScroll.innerHTML += `
+            <tr class="${clase}">
+              ${j.jornadas.map(val => `<td>${val}</td>`).join("")}
+            </tr>
+          `;
+        });
+      });
   </script>
 </body>
 </html>
