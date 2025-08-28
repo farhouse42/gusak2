@@ -36,7 +36,6 @@
       overflow-x: auto;
       background-color: #1a1a1a;
       border-radius: 0 12px 12px 0;
-      text-align: center;
     }
 
     table {
@@ -103,6 +102,10 @@
       }
       th, td {
         padding: 6px;
+      }
+
+      td.jornada {
+        text-align: center;
       }
     }
   </style>
@@ -172,7 +175,7 @@
 
           datScroll.innerHTML += `
             <tr class="${clase}">
-              ${j.jornadas.map(val => `<td>${val}</td>`).join("")}
+              ${j.jornadas.map(val => `<td class="jornada">${val}</td>`).join("")}
             </tr>
           `;
         });
