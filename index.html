@@ -254,21 +254,29 @@
     const urlCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-IvFFGYOHR_OxkUBqUIReu9vSb3CJq5B31jH2vGU1zAQ68BqB1FIJRCPXpWMML41GLbxPxoPzKekP/pub?gid=1550608994&single=true&output=csv";
 
     const AVATAR_CONFIG = {
-      'Ander':  { bg: '#000000', color: '#ff6b00' },
-      'Rodri':  { bg: '#00529f', color: '#fff' },
-      'Sertu':  { bg: '#00cc44', color: '#000' },
-      'Danel':  { bg: '#614a2c', color: '#fff' },
-      'Josu':   { bg: '#095929', color: '#fff' },
-      'Markel': { bg: '#FDE100', color: '#000' },
-      'Ibon':   { bg: '#DA291C', color: '#fff' },
-      'Rio':    { bg: '#FEC1CA', color: '#000' },
-      'Salva':  { bg: '#EF0107', color: '#fff' },
-      'Galder': { bg: '#37003c', color: '#00ff85' },
-      'Carre':  { bg: '#0057B8', color: '#FFD700' },
-      'Ima':    { bg: '#7b6ca8', color: '#fff' },
-      'Beñat':  { bg: '#241F20', color: '#fff' },
-      'Melo':   {bg: 'repeating-linear-gradient(90deg, #008929 0px, #008929 8px, #ffffff 8px, #ffffff 16px)', color: '#008929', shape: 'polygon(0% 0%, 100% 0%, 100% 20%, 50% 100%, 0% 20%)'};
-
+  'Ander':  { bg: '#000000', color: '#ff6b00' },
+  'Rodri':  { bg: '#00529f', color: '#fff' },
+  'Sertu':  { bg: '#00cc44', color: '#000' },
+  'Danel':  { bg: '#614a2c', color: '#fff' },
+  'Josu':   { bg: '#095929', color: '#fff' },
+  'Markel': { bg: '#FDE100', color: '#000' },
+  'Ibon':   { bg: '#DA291C', color: '#fff' },
+  'Rio':    { bg: '#FEC1CA', color: '#000' },
+  'Salva':  { bg: '#EF0107', color: '#fff' },
+  'Galder': { bg: '#37003c', color: '#00ff85' },
+  'Carre':  { bg: '#0057B8', color: '#FFD700' },
+  'Ima':    { bg: '#7b6ca8', color: '#fff' },
+  'Beñat':  { 
+      bg: 'repeating-linear-gradient(45deg, #241F20 0px, #241F20 7px, #fff 7px, #fff 14px)', 
+      color: '#fff', 
+      shape: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' 
+  },
+  'Melo':   { 
+      bg: 'repeating-linear-gradient(90deg, #008929 0px, #008929 8px, #ffffff 8px, #ffffff 16px)', 
+      color: '#008929', 
+      shape: 'polygon(0% 0%, 100% 0%, 100% 20%, 50% 100%, 0% 20%)' 
+  }
+};
     const FALLBACK = { bg: '#888', color: '#fff' };
 
     function initials(name) {
@@ -276,9 +284,25 @@
     }
 
     function avatarHTML(nombre) {
-      const cfg = AVATAR_CONFIG[nombre] || FALLBACK;
-      return `<div class="avatar" style="background:${cfg.bg}; color:${cfg.color}">${initials(nombre)}</div>`;
-    }
+  const cfg = AVATAR_CONFIG[nombre] || FALLBACK;
+  
+  // Si no hay forma (shape), por defecto es un círculo
+  const borderRadius = cfg.shape ? '0' : '50%';
+  const clipPath = cfg.shape ? `clip-path: ${cfg.shape}; -webkit-clip-path: ${cfg.shape};` : '';
+  
+  // Sombra de texto para mejorar legibilidad en patrones
+  const textShadow = 'text-shadow: 1px 1px 2px rgba(0,0,0,0.3), -1px -1px 2px rgba(255,255,255,0.3);';
+
+  return `
+    <div class="avatar" 
+         style="background: ${cfg.bg}; 
+                color: ${cfg.color}; 
+                border-radius: ${borderRadius}; 
+                ${clipPath} 
+                ${textShadow}">
+      ${initials(nombre)}
+    </div>`;
+}
 
     fetch(urlCSV)
       .then(r => r.text())
