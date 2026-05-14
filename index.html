@@ -253,25 +253,32 @@
   <script>
     const urlCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-IvFFGYOHR_OxkUBqUIReu9vSb3CJq5B31jH2vGU1zAQ68BqB1FIJRCPXpWMML41GLbxPxoPzKekP/pub?gid=1550608994&single=true&output=csv";
 
-    const AVATAR_COLORS = [
-      '#37003c','#00529f','#c8102e','#6c1d45','#1b458f',
-      '#DA291C','#003090','#EF0107','#0057B8','#241F20',
-      '#034694','#132257','#7A263A','#FDB913'
-    ];
+    const AVATAR_CONFIG = {
+      'Ander':  { bg: '#000000', color: '#ff6b00' },
+      'Rodri':  { bg: '#00529f', color: '#fff' },
+      'Sertu':  { bg: '#00cc44', color: '#000' },
+      'Danel':  { bg: '#614a2c', color: '#fff' },
+      'Josu':   { bg: '#095929', color: '#fff' },
+      'Markel': { bg: '#FDE100', color: '#000' },
+      'Ibon':   { bg: '#DA291C', color: '#fff' },
+      'Rio':    { bg: '#FEC1CA', color: '#000' },
+      'Salva':  { bg: '#EF0107', color: '#fff' },
+      'Galder': { bg: '#37003c', color: '#00ff85' },
+      'Carre':  { bg: '#0057B8', color: '#FFD700' },
+      'Ima':    { bg: '#7b6ca8', color: '#fff' },
+      'Beñat':  { bg: '#241F20', color: '#fff' },
+      'Melo':   { bg: '#008929', color: '#fff' },
+    };
+
+    const FALLBACK = { bg: '#888', color: '#fff' };
 
     function initials(name) {
       return name.trim().substring(0, 2).toUpperCase();
     }
 
-    // Construye el HTML del avatar: imagen si existe, fallback a iniciales
-    function avatarHTML(nombre, color) {
-      const src = `avatars/${nombre.trim().toLowerCase()}.jpg`;
-      return `<img
-        class="avatar"
-        src="${src}"
-        alt="${nombre}"
-        onerror="this.outerHTML='<div class=\\'avatar\\' style=\\'background:${color}\\'>${initials(nombre)}</div>'"
-      />`;
+    function avatarHTML(nombre) {
+      const cfg = AVATAR_CONFIG[nombre] || FALLBACK;
+      return `<div class="avatar" style="background:${cfg.bg}; color:${cfg.color}">${initials(nombre)}</div>`;
     }
 
     fetch(urlCSV)
@@ -320,8 +327,6 @@
           else if (i >= n - 4) clase = `bottom-${n - i}`;
 
           const sepClass = i === 4 ? ' separator' : '';
-          const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
-
           const jornadasHTML = j.jornadas.map(v => {
             const isNP = v.toUpperCase() === 'NP' || v === '' || v === '-';
             return `<td class="col-j${isNP ? ' np' : ''}">${v || '—'}</td>`;
@@ -333,7 +338,7 @@
               <td class="col-pos">${pos}</td>
               <td class="col-name">
                 <div class="player-cell">
-                  ${avatarHTML(j.nombre, color)}
+                  ${avatarHTML(j.nombre)}
                   <span>${j.nombre}</span>
                 </div>
               </td>
