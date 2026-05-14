@@ -267,13 +267,13 @@
   'Carre':  { bg: '#0057B8', color: '#FFD700' },
   'Ima':    { bg: '#7b6ca8', color: '#fff' },
   'Beñat':  { 
-      bg: 'repeating-linear-gradient(45deg, #241F20 0px, #241F20 7px, #fff 7px, #fff 14px)', 
-      color: '#fff', 
+      bg: '#241F20', 
+      color: '#FFFFFF', 
       shape: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' 
   },
   'Melo':   { 
-      bg: 'repeating-linear-gradient(90deg, #008929 0px, #008929 8px, #ffffff 8px, #ffffff 16px)', 
-      color: '#008929', 
+      bg: '#008929, 
+      color: '#FFFFFF', 
       shape: 'polygon(0% 0%, 100% 0%, 100% 20%, 50% 100%, 0% 20%)' 
   }
 };
@@ -290,9 +290,6 @@
   const borderRadius = cfg.shape ? '0' : '50%';
   const clipPath = cfg.shape ? `clip-path: ${cfg.shape}; -webkit-clip-path: ${cfg.shape};` : '';
   
-  // Sombra de texto para mejorar legibilidad en patrones
-  const textShadow = 'text-shadow: 1px 1px 2px rgba(0,0,0,0.3), -1px -1px 2px rgba(255,255,255,0.3);';
-
   return `
     <div class="avatar" 
          style="background: ${cfg.bg}; 
