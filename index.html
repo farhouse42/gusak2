@@ -296,14 +296,15 @@
     }
  
     function avatarHTML(nombre) {
-      const cfg = AVATAR_CONFIG[nombre] || FALLBACK;
+  const cfg = AVATAR_CONFIG[nombre] || FALLBACK;
   const imgSrc = `avatars/${nombre.toLowerCase()}.png`;
   return `<div class="avatar" style="background:${cfg.bg}; color:${cfg.color}">
     <img src="${imgSrc}" alt="${nombre}"
       style="width:100%;height:100%;border-radius:50%;object-fit:cover;"
+      onload="this.parentElement.style.background='transparent'; this.style.borderRadius='0'; this.style.objectFit='contain';"
       onerror="this.style.display='none'; this.parentElement.textContent='${initials(nombre)}'">
   </div>`;
-    }
+}
 
     fetch(urlCSV)
       .then(r => r.text())
