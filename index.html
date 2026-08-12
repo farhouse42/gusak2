@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Güsak Champions League</title>
+  <title>GÜSAK Champions League</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
   @font-face {
     font-family: 'Radikal';
@@ -28,9 +31,9 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Radikal', sans-serif;
-      background-color: #eef1f8;
-      color: #0a1330;
+      font-family: 'Montserrat', 'Radikal', sans-serif;
+      background-color: #eef1f6;
+      color: #10193a;
       padding: 32px 20px;
     }
 
@@ -42,28 +45,28 @@
     }
 
     .logo {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(160deg, #0a1a4d, #142e73);
-      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      background: #0a1a4d;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 0 0 2px #00c8ff33;
     }
 
     .logo svg {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       fill: #00c8ff;
     }
 
     header h1 {
       font-size: 22px;
-      font-weight: 700;
+      font-weight: 800;
       color: #0a1a4d;
       letter-spacing: -0.3px;
+      text-transform: uppercase;
     }
 
     header p {
@@ -77,16 +80,16 @@
       display: flex;
       align-items: flex-start;
       background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border-radius: 6px;
+      border: 1px solid #dde2ee;
       overflow: hidden;
     }
 
     /* ── Tabla FIJA (izquierda) ── */
     .tabla-fija {
       flex-shrink: 0;
-      /* Sombra derecha para indicar scroll */
-      box-shadow: 3px 0 8px rgba(0,0,0,0.10);
+      /* Separador con la parte scrollable */
+      border-right: 1px solid #dde2ee;
       position: relative;
       z-index: 1;
     }
@@ -106,9 +109,9 @@
     }
 
     thead th {
-      background: linear-gradient(160deg, #0a1a4d, #142e73);
+      background: #0a1a4d;
       color: #fff;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 12px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
@@ -161,7 +164,7 @@
       font-weight: 700;
       font-size: 15px;
       width: 52px;
-      border-right: none; /* el box-shadow del contenedor hace de separador */
+      border-right: none; /* el borde del contenedor hace de separador */
     }
 
     th.col-pts-h {
@@ -333,15 +336,16 @@
           return t === '' || t === 'NP' || t === '-';
         }
 
-        // Última jornada con al menos un dato real (no vacía/NP para todos)
+        // Jornada actual = la primera que está completamente sin rellenar
+        // (las jornadas ya jugadas quedan con datos; la que toca jugar/rellenar está vacía)
         let idxJornadaActual = -1;
-        for (let i = jornHeaders.length - 1; i >= 0; i--) {
-          if (jugadores.some(j => !celdaVacia(j.jornadas[i]))) {
+        for (let i = 0; i < jornHeaders.length; i++) {
+          if (jugadores.every(j => celdaVacia(j.jornadas[i]))) {
             idxJornadaActual = i;
             break;
           }
         }
-        const jornadaActual = idxJornadaActual >= 0 ? jornHeaders[idxJornadaActual] : '—';
+        const jornadaActual = idxJornadaActual >= 0 ? jornHeaders[idxJornadaActual] : jornHeaders[jornHeaders.length - 1] || '—';
 
         document.getElementById('subtitulo').textContent =
           `Jornada actual: ${jornadaActual}`;
