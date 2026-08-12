@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quiniela Güsak</title>
+  <title>Güsak Champions League</title>
   <style>
   @font-face {
     font-family: 'Radikal';
@@ -29,8 +29,8 @@
 
     body {
       font-family: 'Radikal', sans-serif;
-      background-color: #f5f5f5;
-      color: #1a1a1a;
+      background-color: #eef1f8;
+      color: #0a1330;
       padding: 32px 20px;
     }
 
@@ -44,24 +44,25 @@
     .logo {
       width: 48px;
       height: 48px;
-      background: #37003c;
+      background: linear-gradient(160deg, #0a1a4d, #142e73);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      box-shadow: 0 0 0 2px #00c8ff33;
     }
 
     .logo svg {
-      width: 28px;
-      height: 28px;
-      fill: #00ff85;
+      width: 26px;
+      height: 26px;
+      fill: #00c8ff;
     }
 
     header h1 {
       font-size: 22px;
       font-weight: 700;
-      color: #37003c;
+      color: #0a1a4d;
       letter-spacing: -0.3px;
     }
 
@@ -105,7 +106,7 @@
     }
 
     thead th {
-      background: #37003c;
+      background: linear-gradient(160deg, #0a1a4d, #142e73);
       color: #fff;
       font-weight: 600;
       font-size: 12px;
@@ -164,7 +165,7 @@
     }
 
     th.col-pts-h {
-      background: #4a0057;
+      background: #00335c;
     }
 
     /* ── Columnas de jornadas ── */
@@ -327,8 +328,23 @@
         const jornHeaders = headers.slice(2);
         const n = jugadores.length;
 
+        function celdaVacia(v) {
+          const t = (v || '').toString().trim().toUpperCase();
+          return t === '' || t === 'NP' || t === '-';
+        }
+
+        // Última jornada con al menos un dato real (no vacía/NP para todos)
+        let idxJornadaActual = -1;
+        for (let i = jornHeaders.length - 1; i >= 0; i--) {
+          if (jugadores.some(j => !celdaVacia(j.jornadas[i]))) {
+            idxJornadaActual = i;
+            break;
+          }
+        }
+        const jornadaActual = idxJornadaActual >= 0 ? jornHeaders[idxJornadaActual] : '—';
+
         document.getElementById('subtitulo').textContent =
-          `${n} jugadores · Jornada actual: ${jornHeaders[jornHeaders.length - 1] || '—'}`;
+          `Jornada actual: ${jornadaActual}`;
 
         // Cabeceras
         document.getElementById('cabecera-fija').innerHTML = `
